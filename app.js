@@ -1,7 +1,8 @@
-// var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-// person + "&api_key=dc6zaTOxFJmzC&limit=10"
+//how does this keyword reference the buttion that was clicked? var foodType?
 var foodSearch
 var topics = ["pizza", "burger", "pasta", "bacon", "salad"];
+
+
 
 function renderButtons(){
     $("#buttonDisplay").empty();
@@ -34,14 +35,14 @@ function renderButtons(){
     renderButtons();
     });
 
-    $("button").on("click", function() {
+
+     function showFood() {
         // In this case, the "this" keyword refers to the button that was clicked
         var foodType = $(this).attr("data-name");
-  
         // Constructing a URL to search Giphy for the name of the person who said the quote
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
           foodType + "&api_key=dc6zaTOxFJmzC&limit=10";
-  
+
         // Performing our AJAX GET request
         $.ajax({
           url: queryURL,
@@ -52,36 +53,35 @@ function renderButtons(){
             // Storing an array of results in the results variable
             var results = response.data;
             console.log(results)
-            // Looping over every result item
-            // for (var i = 0; i < results.length; i++) {
+            //Looping over every result item
+            for (var i = 0; i < results.length; i++) {
   
-            //   // Only taking action if the photo has an appropriate rating
-            //   if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-            //     // Creating a div for the gif
-            //     var gifDiv = $("<div>");
+              // Only taking action if the photo has an appropriate rating
+              if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+                // Creating a div for the gif
+                var gifDiv = $("<div>");
   
-            //     // Storing the result item's rating
-            //     var rating = results[i].rating;
+                // Storing the result item's rating
+                var rating = results[i].rating;
   
-            //     // Creating a paragraph tag with the result item's rating
-            //     var p = $("<p>").text("Rating: " + rating);
+                // Creating a paragraph tag with the result item's rating
+                var p = $("<p>").text("Rating: " + rating);
   
-            //     // Creating an image tag
-            //     var personImage = $("<img>");
+                // Creating an image tag
+                var foodImage = $("<img>");
   
-            //     // Giving the image tag an src attribute of a proprty pulled off the
-            //     // result item
-            //     personImage.attr("src", results[i].images.fixed_height.url);
+                // Giving the image tag an src attribute of a proprty pulled off the
+                // result item
+                foodImage.attr("src", results[i].images.fixed_height.url);
   
-            //     // Appending the paragraph and personImage we created to the "gifDiv" div we created
-            //     gifDiv.append(p);
-            //     gifDiv.append(personImage);
+                // Appending the paragraph and personImage we created to the "gifDiv" div we created
+                gifDiv.append(p);
+                gifDiv.append(foodImage);
   
-            //     // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
-            //     $("#gifs-appear-here").prepend(gifDiv);
-            //   }
-            // }
-          });
-      });
-
-renderButtons();
+                // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
+                $("#gifDisplay").prepend(gifDiv);
+              }
+            }
+          })};
+          $(document).on("click", ".moreTopics", showFood);
+          renderButtons();
