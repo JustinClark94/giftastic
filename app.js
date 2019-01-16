@@ -9,8 +9,8 @@ function renderButtons(){
 //Creating a for loop to create a button for each string in the array.
     for (var i=0; i < topics.length; i++){
         var a = $("<button>");
-        // Adding a class
-        a.addClass("moreTopics");
+        // Adding a class and some bootstrap references to change display of buttons
+        a.addClass("moreTopics btn btn-danger btn-lg");
         // Adding a data-attribute with a value of the movie at index i
         a.attr("data-name", topics[i]);
         // Providing the button's text with a value of the movie at index i
@@ -60,7 +60,7 @@ function renderButtons(){
               if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
                 // Creating a div for the gif
                 var gifDiv = $("<div>");
-  
+                    gifDiv.addClass("float-left")
                 // Storing the result item's rating
                 var rating = results[i].rating;
   
@@ -72,8 +72,14 @@ function renderButtons(){
   
                 // Giving the image tag an src attribute of a proprty pulled off the
                 // result item
-                foodImage.attr("src", results[i].images.fixed_height.url);
-  
+                // also added appropriate attributes to pull gif stills and animated gifs.
+                foodImage.attr({"src": results[i].images.fixed_height_still.url,
+                  "data-animate": results[i].images.fixed_height.url,
+                  "data-still": results[i].images.fixed_height_still.url,
+                  "data-state": "still"
+                });
+
+                foodImage.addClass("gif")
                 // Appending the paragraph and personImage we created to the "gifDiv" div we created
                 gifDiv.append(p);
                 gifDiv.append(foodImage);
@@ -83,5 +89,21 @@ function renderButtons(){
               }
             }
           })};
+
+          $(document).on("click",".gif", function() {
+            // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+            var state = $(this).attr("data-state");
+            // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+            // Then, set the image's data-state to animate
+            // Else set src to the data-still value
+            if (state === "still") {
+              $(this).attr("src", $(this).attr("data-animate"));
+              $(this).attr("data-state", "animate");
+            } else {
+              $(this).attr("src", $(this).attr("data-still"));
+              $(this).attr("data-state", "still");
+            }
+          });
+
           $(document).on("click", ".moreTopics", showFood);
           renderButtons();
